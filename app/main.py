@@ -1,10 +1,9 @@
-from app import createFlaskAPP
+from app import create_app
+from flask import jsonify
 
-app = createFlaskAPP('dev')
+app = create_app('dev')
 
 
 @app.route('/')
 def route_map():
-    return {
-        rule.endpoint: rule.rule for rule in app.url_map.iter_rules()
-    }
+    return jsonify({'msg': 'hello world'})

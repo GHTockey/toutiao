@@ -1,12 +1,15 @@
 from flask import Flask
 from os import path as OS_path
 import sys
+from flask_sqlalchemy import SQLAlchemy
 
 baseDir = OS_path.dirname(
-    OS_path.abspath(__file__)
+    OS_path.dirname(
+        OS_path.abspath(__name__)
+    )
 )
 
-sys.path.insert(0, baseDir + '/common')
+# sys.path.insert(0, baseDir + '/common')
 
 from app.settings.config import config_dict
 from common.utils.constants import EXTRA_ENV_CONFIG
@@ -19,16 +22,19 @@ def createFlaskAPP(type):
     # 加载默认配置
     app.config.from_object(config_class)
     # 加载额外配置
-    app.config.from_envvar(EXTRA_ENV_CONFIG)
+    app.config.from_envvar(EXTRA_ENV_CONFIG, silent=True)  # silent=True 无法加载额外配置时不报错
 
     return app
 
 
-def create_app(type):
-    """创建应用 和 组件初始化"""
+db = SQLAlchemy()
 
+
+# 创建应用 和 组件初始化
+def create_app(type):
     # 创建flask应用
     app = createFlaskAPP(type)
     # 组件初始化
+    db.init_app(app)
 
     return app
