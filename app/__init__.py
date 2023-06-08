@@ -30,11 +30,19 @@ def createFlaskAPP(type):
 db = SQLAlchemy()
 
 
+# 注册模块
+def register_module(app: Flask):
+    from app.resources.user import user_module
+    app.register_blueprint(user_module)
+
+
 # 创建应用 和 组件初始化
 def create_app(type):
     # 创建flask应用
     app = createFlaskAPP(type)
     # 组件初始化
     db.init_app(app)
+    # 调用注册模块(蓝图)函数
+    register_module(app)
 
     return app
